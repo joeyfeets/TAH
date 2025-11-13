@@ -15,18 +15,37 @@
       Your payment is being processed. You'll get an email when your order is confirmed.
     {% endif %}
   {% else %}
-    {% if order.tags contains 'Holiday' %}
+    <!-- Line Item Flags -->
+    {% assign has_holiday_tag = false %}
+    {% assign has_bakers_heart_tag = false %}
+    {% assign has_thanksgiving_tag = false %}
+    {% assign has_ohana_meals_tag = false %}
+    <!-- Iterate through Line Items -->
+    {% for line_item in line_items %}
+      {% if line_item.product.tags contains 'Holiday' %}
+        {% assign has_holiday_tag = true %}
+      {% endif %}
+      {% if line_item.product.tags contains 'Bakers Heart' %}
+        {% assign has_bakers_heart_tag = true %}
+      {% endif %}
+      {% if line_item.product.tags contains 'Thanksgiving' %}
+        {% assign has_thanksgiving_tag = true %}
+      {% endif %}
+      {% if line_item.product.tags contains 'Ohana Meals' %}
+        {% assign has_ohana_meals_tag = true %}
+      {% endif %}
+    {% endfor %}
+    <!-- Check for Cookie tags -->
+    {% if has_holiday_tag %}
       <!-- Holiday Messaging -->
       Holiday Baker's Heart order pickup begins Mondays through Fridays at Kalihi Union Church on November 17th, from 8:00am to 1:00pm. Please call 808-763-7477 or email orders@touchahearthawaii.org to schedule your pickup date and time.
-      {% elsif order.tags contains 'Bakers Heart' %}
+    {% elsif has_bakers_heart_tag %}
       <!-- Bakers Heart Messaging -->
       Baker's Heart orders may be picked up on Wednesdays within our 'Ohana Meals time-frames (Kalihi 10:00am - 12:00pm / Pearl City 2:00pm - 3:30pm). If you would like a different pickup date or time, please call 808-763-7477 (Alisa) or email orders@touchahearthawaii.org to schedule your pickup date and time.
-    {% endif %}
-
-    {% if order.tags contains 'Thanksgiving' %}
+    {% elsif has_thanksgiving_tag %}
       <!-- Thanksgiving Messaging -->
       Thanksgiving 'Ohana Meals order pickup is on Wednesday, November 26th (Kalihi 10:00am - 12:00pm / Pearl City 2:00pm - 3:30pm). Please call 808-763-7477 if you have questions about your order. 
-    {% elsif order.tags contains 'Ohana Meals' %}
+    {% elsif has_ohana_meals_tag %}
       <!-- Ohana Meals Messaging -->
       'Ohana Meals pickups occur every Wednesday (Kalihi 10:00am - 12:00pm / Pearl City 2:00pm - 3:30pm). Please call 808-763-7477 if you have questions about your order. 
     {% else %}
